@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="vi" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Quản Lý Bảng Feature AI</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 Free Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Dedicated Admin CSS -->
+    <link rel="stylesheet" href="/admin/admin.css?v=5.1">
+</head>
+<body class="bg-dark text-light">
+
+    <!-- 1. MÀN HÌNH ĐĂNG NHẬP ADMIN -->
+    <div class="container vh-100 d-flex align-items-center justify-content-center" id="loginContainer">
+        <div class="card glass-card p-4 p-md-5 border-0 shadow-lg" style="max-width: 440px; width: 100%;">
+            <div class="text-center mb-4">
+                <div class="brand-badge mx-auto mb-3">
+                    <i class="fa-solid fa-shield-halved fs-3 text-white"></i>
+                </div>
+                <h3 class="fw-extrabold mb-1">Admin Portal</h3>
+                <p class="small text-secondary mb-0">Hệ Thống Quản Lý Động Tính Năng AI</p>
+            </div>
+
+            <div id="loginAlert" class="alert alert-danger d-none py-2.5 px-3 small rounded-3 border-0 shadow-sm" role="alert"></div>
+
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Tài khoản Admin</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark-subtle text-secondary border-0"><i class="fa-solid fa-user-gear"></i></span>
+                        <input type="text" id="usernameInput" class="form-control" placeholder="Tên đăng nhập..." required value="admin">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold text-secondary">Mật khẩu</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark-subtle text-secondary border-0"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" id="passwordInput" class="form-control" placeholder="Mật khẩu..." required value="admin123">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 rounded-pill py-2.5 fw-bold fs-6">
+                    <i class="fa-solid fa-right-to-bracket me-2"></i> Đăng Nhập Hệ Thống
+                </button>
+            </form>
+
+            <div class="mt-4 text-center">
+                <a href="/" class="small text-secondary text-decoration-none hover-primary">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Quay lại trang AI người dùng
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. ADMIN DASHBOARD CONTROL PANEL (CRUD BẢNG FEATURE) -->
+    <div class="container-fluid vh-100 p-3 p-md-4 d-none flex-column" id="adminContainer">
+        
+        <!-- Admin Header Navigation -->
+        <div class="w-100 max-app-width mx-auto mb-4 d-flex justify-content-between align-items-center glass-card p-3 px-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="brand-badge">
+                    <i class="fa-solid fa-sliders fs-4 text-white"></i>
+                </div>
+                <div>
+                    <div class="d-flex align-items-center gap-2">
+                        <h4 class="mb-0 fw-extrabold">Admin Feature Portal</h4>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3.5 py-1.5 fs-7 fw-semibold">
+                            <i class="fa-solid fa-database me-1"></i> SQLite Table: features
+                        </span>
+                    </div>
+                    <small class="text-secondary">Quản Lý CRUD Danh Sách Tính Năng AI Hiển Thị Cho Trang RAG</small>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2.5">
+                <a href="/" class="btn btn-outline-light btn-sm rounded-pill px-3.5 py-2 fw-semibold border-secondary-subtle">
+                    <i class="fa-solid fa-eye text-info me-1.5"></i> Xem Trang RAG
+                </a>
+                <button class="btn btn-danger btn-sm rounded-pill px-3.5 py-2 fw-semibold" id="logoutBtn">
+                    <i class="fa-solid fa-arrow-right-from-bracket me-1.5"></i> Đăng Xuất
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Admin Content Area -->
+        <div class="w-100 max-app-width mx-auto flex-grow-1 overflow-y-auto">
+            <div class="card glass-card p-4 p-md-4 mb-4">
+                
+                <!-- Section Header & Controls -->
+                <div class="row align-items-center mb-4 g-3">
+                    <div class="col-md-7">
+                        <h4 class="fw-bold text-white mb-1">
+                            <i class="fa-solid fa-wand-magic-sparkles text-warning me-2"></i>Quản Lý CRUD Bảng <code>features</code>
+                        </h4>
+                        <p class="text-secondary small mb-0">Thêm mới, chỉnh sửa, xóa và bật/tắt hiển thị các tính năng AI trực tiếp trên giao diện CSDL.</p>
+                    </div>
+                    <div class="col-md-5 d-flex justify-content-md-end gap-2">
+                        <button class="btn btn-outline-primary btn-sm rounded-pill px-3 py-2 fw-semibold" id="reloadAdminFeaturesBtn">
+                            <i class="fa-solid fa-rotate me-1.5"></i> Tải lại danh sách
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Form Thêm Feature Mới (CREATE) -->
+                <div class="bg-dark-subtle p-3.5 p-md-4 rounded-4 border border-secondary-subtle mb-4">
+                    <h6 class="fw-bold text-primary mb-3">
+                        <i class="fa-solid fa-circle-plus me-1.5"></i>Thêm Mới Feature (Create Record)
+                    </h6>
+                    <form id="addFeatureForm" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-secondary">Tên tính năng (Title)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-0 text-secondary"><i class="fa-solid fa-heading"></i></span>
+                                <input type="text" id="featTitle" class="form-control" placeholder="VD: Audio Transcription" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-semibold text-secondary">Mô tả tính năng (Description)</label>
+                            <input type="text" id="featDesc" class="form-control" placeholder="Mô tả công dụng của tính năng..." required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-semibold text-secondary">Icon Class</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-0 text-secondary"><i class="fa-solid fa-icons"></i></span>
+                                <input type="text" id="featIcon" class="form-control" value="fa-solid fa-sparkles">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small fw-semibold text-secondary">Badge Nhãn</label>
+                            <input type="text" id="featBadge" class="form-control" value="Active">
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="submit" class="btn btn-success w-100 rounded-3 py-2 fw-bold">
+                                <i class="fa-solid fa-plus me-1"></i> Thêm
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Bảng Hiển Thị Feature (READ / UPDATE / DELETE) -->
+                <div class="table-responsive rounded-4 border border-secondary-subtle">
+                    <table class="table table-glass align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 70px;">ID</th>
+                                <th style="width: 220px;">Tên Tính Năng</th>
+                                <th>Mô Tả Chi Tiết</th>
+                                <th style="width: 150px;">Icon preview</th>
+                                <th style="width: 110px;">Badge</th>
+                                <th style="width: 150px;">Trạng Thái</th>
+                                <th class="text-end" style="width: 130px;">Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="featuresTableBody">
+                            <tr><td colspan="7" class="text-center text-secondary py-4">Đang kết nối CSDL và tải danh sách...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL CHỈNH SỬA FEATURE (UPDATE) -->
+    <div class="modal fade" id="editFeatureModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom border-secondary-subtle p-3 px-4">
+                    <h5 class="modal-title fw-bold text-primary"><i class="fa-solid fa-pen-to-square me-2"></i>Chỉnh Sửa Bản Ghi Feature</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="editFeatureForm">
+                        <input type="hidden" id="editFeatId">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-secondary">Tên tính năng (Title)</label>
+                            <input type="text" id="editFeatTitle" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-secondary">Mô tả chi tiết (Description)</label>
+                            <textarea id="editFeatDesc" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-secondary">Icon Class (FontAwesome / BI)</label>
+                                <input type="text" id="editFeatIcon" class="form-control" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold text-secondary">Badge Nhãn</label>
+                                <input type="text" id="editFeatBadge" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-4 bg-dark-subtle p-3 rounded-3 border border-secondary-subtle">
+                            <div class="form-check form-switch mb-0">
+                                <input class="form-check-input" type="checkbox" id="editFeatActive">
+                                <label class="form-label small fw-semibold text-light mb-0 ms-2" for="editFeatActive">Bật hiển thị ra Trang RAG Người Dùng (is_active)</label>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Hủy bỏ</button>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC NHẬN XÓA FEATURE (DELETE CONFIRM MODAL) -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content text-center p-3 border-danger-subtle">
+                <div class="modal-body p-3">
+                    <div class="text-danger fs-1 mb-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2 text-white">Xác nhận xóa?</h5>
+                    <p class="small text-secondary mb-4">Bạn có chắc chắn muốn xóa vĩnh viễn Feature ID <span id="deleteTargetId" class="fw-bold text-warning fs-6"></span>?</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3.5" data-bs-dismiss="modal">Hủy bỏ</button>
+                        <button type="button" class="btn btn-danger btn-sm rounded-pill px-3.5 fw-bold" id="confirmDeleteBtn">
+                            <i class="fa-solid fa-trash-can me-1"></i> Xóa ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Dedicated Admin JS Script with Cache Buster -->
+    <script src="/admin/admin.js?v=5.1"></script>
+</body>
+</html>
